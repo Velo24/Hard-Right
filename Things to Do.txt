@@ -1,0 +1,2 @@
+- add comments in general
+- add comments in GravTrun.m regarding C# variable names
