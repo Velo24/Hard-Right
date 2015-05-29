@@ -17,6 +17,15 @@ pause(5)
 
 %% Engage Fly-By-Wire
 % Turn on auto-pilot
+%{ ----- C# code -----
+//Initialize Flight Control State
+s_ext.roll = 0F;            //zero roll
+s_ext.pitch = 0F;           //zero pitch
+s_ext.yaw = 0F;             //zero yaw
+s_ext.mainThrottle = 0F;    //zero main throttle 
+//Engage Autopilot
+this.vessel.OnFlyByWire += new FlightInputCallback(fly);
+%}
 twrite(t, uint8(32), 'uint8');
 twrite(t, uint8(1), 'uint8');
 while t.bytesAvailable < 1    
@@ -25,14 +34,26 @@ retcode = tread(t, 1, 'uint8'); %#ok<*NASGU>
 fprintf('Computers:      ON\n')
 pause(1)
 
+
 %% Tare Navigation
 % Get position
+%{ ----- C# code -----
+binWriter.Write(this.vessel.orbit.pos.x);
+binWriter.Write(this.vessel.orbit.pos.y);
+binWriter.Write(this.vessel.orbit.pos.z);
+%}
 twrite(t, uint8(16), 'uint8');
 while t.bytesAvailable < 25
 end
 retcode = tread(t, 1, 'uint8');
 pos0 = tread(t, 3, 'double');
 
+
+%{ ---- C# code -----
+binWriter.Write(this.vessel.orbit.vel.x);
+binWriter.Write(this.vessel.orbit.vel.y);
+binWriter.Write(this.vessel.orbit.vel.z);
+%}
 twrite(t, uint8(17), 'uint8');
 while t.bytesAvailable < 25
 end
